@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+    <title>Torch Model Predictor</title>
+</head>
+<body>
+    <h1>Flight Fare Predictor</h1>
+
+    <form id="prediction-form" method="POST" action="/predict_api">
+        <!-- Your form fields here (adjust based on your input features) -->
+        <label for="airline">Airline:</label>
+        <input type="text" id="airline" name="airline" required>
+
+        <label for="source_city">Source City:</label>
+        <input type="text" id="source_city" name="source_city" required>
+
+        <label for="departure_time">Departure Time:</label>
+        <input type="text" id="departure_time" name="departure_time" required>
+
+        <label for="stops">Stops:</label>
+        <input type="text" id="stops" name="stops" required>
+
+        <label for="arrival_time">Arrival Time:</label>
+        <input type="text" id="arrival_time" name="arrival_time" required>
+
+        <label for="destination_city">Destination City:</label>
+        <input type="text" id="destination_city" name="destination_city" required>
+
+        <label for="classu">Class:</label>
+        <input type="text" id="classu" name="classu" required>
+
+        <label for="duration">Duration:</label>
+        <input type="text" id="duration" name="duration" required>
+
+        <label for="days_left">Days Left:</label>
+        <input type="text" id="days_left" name="days_left" required>
+
+        <button type="submit">Predict</button>
+    </form>
+
+    <div id="result-container">
+        <!-- Display prediction result here -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var predictionForm = document.getElementById('prediction-form');
+            var resultContainer = document.getElementById('result-container');
+
+            predictionForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                fetch('/predict_api', {
+                    method: 'POST',
+                    body: new FormData(predictionForm),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if ('prediction' in data) {
+                        // Display the prediction result
+                        resultContainer.innerHTML = '<p>The predicted fare is Rs. ' + data.prediction + '</p>';
+                    } else if ('error' in data) {
+                        // Handle the error case if needed
+                        resultContainer.innerHTML = '<p>Error: ' + data.error + '</p>';
+                    }
+                })
+                .catch(error => console.error('Fetch error:', error));
+            });
+        });
+    </script>
+</body>
+</html>
